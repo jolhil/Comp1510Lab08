@@ -18,17 +18,14 @@ public class Games {
     /** A number five.*/
     private final int five = 5;
     
-    /** A number hundred.*/
-    private final int hundred = 100;
-    
     /** A score of the user.*/
     private int score;
     
     /** Scanner object.*/
-    private Scanner scan;
+    private Scanner scan = new Scanner(System.in);
     
     /** Random object.*/
-    private Random generator;
+    private Random generator = new Random();
     
     /**
      * Constructor sets the initial score to 0 and
@@ -44,42 +41,52 @@ public class Games {
      * Sets the game menu.
      */
     public void play() {
-        System.out.println("Welcome to the Games Program!"
-                + "\nMake your choice (enter a number):"
-                + "\n1. See your score"
-                + "\n2. Guess a number"
-                + "\n3. Play Rock, Paper, Scissors"
-                + "\n4. Quit");
-        System.out.print(">");
-        int choice = scan.nextInt();
+        boolean programRe = true;
         
-        if (choice == 1) {
-            System.out.println("Your score is " + score);
-            this.play();
-        } else if (choice == 2) {
-            this.guessANumber();
-        } else if (choice == three) {
-            this.rockPaperScissors();
-        } else if (choice == four) {
-            System.out.println("Game end.");
+        while (programRe) {
+            System.out.println("Welcome to the Games Program!"
+                    + "\nMake your choice (enter a number):"
+                    + "\n1. See your score"
+                    + "\n2. Guess a number"
+                    + "\n3. Play Rock, Paper, Scissors"
+                    + "\n4. Quit");
+            System.out.print(">");
             
-        } else if (choice > four || choice <= 0) {
-            System.out.println("Invalid choice.");
-            this.play();
+            int choice = scan.nextInt();
+            
+            switch (choice) {
+                case 1:
+                    System.out.println("Your score is " + score);
+                    break;
+                case 2:
+                    guessANumber();
+                    break;
+                case three:
+                    rockPaperScissors();
+                    break;
+                case four:
+                    programRe = false;
+                    break;
+                default:
+                    System.out.println("Invalid chocie.");
+            }
         }
+        
+        
     }
     
     /**
      * Sets the guess a number game.
      */
     public void guessANumber() {
-        int answer = generator.nextInt(hundred);
+        final int range = 101;
+        int answer = generator.nextInt(range);
         System.out.println("I've picked a random number between "
                 + "0 and 100"
                 + "\nCan you guess it?"
                 + "\nGuess the number!");
         int input = scan.nextInt();
-        while (input > 0 && input < hundred) {
+        while (input > 0 && input < range) {
             while (answer < input) {
                 System.out.println("Too high, guess again!"
                         + "\nGuess the number!");
@@ -91,47 +98,85 @@ public class Games {
                 input = scan.nextInt();
             }
             if (answer == input) {
-                System.out.println("RIGHT!\nFive points!");
-                score = score + five;
+                System.out.println("RIGHT!");
                 break;
             }
         }
-        this.play();
     }
     
     /**
      * Sets a rock paper scissors game.
      */
     public void rockPaperScissors() {
-        int a = generator.nextInt(2);
+        int a = generator.nextInt(three);
+        
         System.out.println("I've picked one of ROCK, PAPER, AND SCISSORS"
                 + "\nWhich one do you choose?");
+        
         String choice = scan.next();
-        int rep = 0;
-        while (choice.equals(choice)) {
-            if (choice.toLowerCase().equals("rock")) {
-                rep = 0;
-                break;
-            } else if (choice.toLowerCase().equals("paper")) {
-                rep = 1;
-                break;
-            } else if (choice.toLowerCase().equals("scissors")) {
-                rep = 2;
-                break;
-            } else {
-                System.out.println("Invalid chocie! Try again!");
-                choice = scan.next();
+        choice.toLowerCase();
+        
+        boolean programReturn = true;
+        
+        while (programReturn) {
+            
+            switch (choice) {
+            
+                case "rock":
+                    if (a == 0) {
+                        System.out.println("Tied!");
+                    }
+                    if (a == 1) {
+                        System.out.println("I've picked paper!"
+                                + "\nYou loose!\n-3 points!");
+                        score = score - three;
+                    }
+                    if (a == 2) {
+                        System.out.println("I've picked scissors!"
+                                + "You win!\n+5points!");
+                        score = score + five;
+                    }
+                    programReturn = false;
+                    break;
+                    
+                case "paper":
+                    if (a == 0) {
+                        System.out.println("I've picked rock!"
+                                + "\nYou win!\n+5 points!");
+                        score = score + five;
+                    }
+                    if (a == 1) {
+                        System.out.println("Tied!");
+                    }
+                    if (a == 2) {
+                        System.out.println("I've picked scissors!"
+                               + "\nYou loose!\n-3 points!"); 
+                        score = score - three;
+                    }
+                    programReturn = false;
+                    break;
+                    
+                case "scissors":
+                    if (a == 0) {
+                        System.out.println("I've picked rock!"
+                                + "\nYou loose!\n-3points");
+                        score = score - three;
+                    }
+                    if (a == 1) {
+                        System.out.println("I've picked paper!"
+                                + "\nYou win!\n+5 points");
+                        score = score + five;
+                    }
+                    if (a == 2) {
+                        System.out.println("Tied!");
+                    }
+                    programReturn = false;
+                    break;
+                    
+                default:
+                    System.out.println("Invalid choice! Try again!");
+                    choice = scan.next();
             }
         }
-        if (rep == a) {
-            System.out.println("Tied!\nSocre doesn't change.");
-        } else if (rep == 2 && a == 0 || rep == (a - 1)) {
-            System.out.println("You loose! Take 3 points from you score.");
-            score = score - three;
-        } else if (rep == 0 && a == 2 || rep == (a + 1)) {
-            System.out.println("You win! Add 5 points on your score.");
-            score = score + five;
-        }
-        this.play();
     }
 }
